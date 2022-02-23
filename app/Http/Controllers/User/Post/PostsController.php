@@ -82,8 +82,6 @@ class PostsController extends Controller
   }
 
   public function favoritepost(){
-  //  $user = Auth::user();
-  //  $users_posts = Postfavorite::where('user_id', $user->id)->get();
     $user_id = Auth::id();
     $users_posts = DB::table('users')
       ->join('posts', 'users.id', '=', 'posts.user_id')
