@@ -84,12 +84,14 @@ class PostsController extends Controller
   public function favoritepost(){
     $user_id = Auth::id();
     $users_posts = DB::table('users')
-      ->join('posts', 'users.id', '=', 'posts.user_id')
-      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title')
+      ->join('post_favorites', 'users.id', '=', 'post_favorites.user_id')
+      ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+      ->where('post_favorites.user_id', $user_id)
+      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_favorites.user_id', 'post_favorites.post_id')
       ->latest()
       ->whereNull('posts.deleted_at')
+      ->whereNull('post_favorites.deleted_at')
       ->get();
-    $users_posts = Postfavorite::where('user_id', $user_id);
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
     $param = [
