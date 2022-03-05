@@ -12,6 +12,8 @@
     <p><a href="/logout">ログアウト</a></p>
     <p><a href="/newcategory">カテゴリーを追加</a></p>
     <p><a href="/post">投稿</a></p>
+    <input type="text" name="search">
+    <button type="button" name="button">検索</button>
     <p><a href="/favoritepost">いいねした投稿</a></p>
     <p><a href="/mypost">自分の投稿</a>
 

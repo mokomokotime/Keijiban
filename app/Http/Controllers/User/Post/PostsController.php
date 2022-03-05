@@ -30,7 +30,10 @@ class PostsController extends Controller
         'post' => $post,
       ];
 
-      return view('posts.index', ['users_posts' => $users_posts, $param, 'post' => $post]);
+      return view('posts.index', [
+        'users_posts' => $users_posts, $param,
+        'post' => $post,
+      ]);
   }
 
   public function newpost(){
@@ -83,9 +86,9 @@ class PostsController extends Controller
 
   public function favoritepost(){
     $user_id = Auth::id();
-    $users_posts = DB::table('users')
-      ->join('post_favorites', 'users.id', '=', 'post_favorites.user_id')
-      ->join('posts', 'post_favorites.post_id', '=', 'posts.id')
+    $users_posts = DB::table('posts')
+      ->join('post_favorites', 'posts.id', '=', 'post_favorites.user_id')
+      ->join('users', 'posts.id', '=', 'users.id')
       ->where('post_favorites.user_id', $user_id)
       ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_favorites.user_id', 'post_favorites.post_id')
       ->latest()
