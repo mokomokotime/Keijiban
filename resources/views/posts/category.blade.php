@@ -18,19 +18,24 @@
         </div>
     @endif
     <label>新規メインカテゴリー</label>
-    <form action="" method="post">
+    <form action="/newmaincategory" method="post">
     @csrf
       <input type="text" name="newmaincategory">
       <input type="submit" name="maincategorybtn" value="登録">
     </form>
-    <form action="" method="post">
+    <form action="/newsubcategory" method="post">
     @csrf
       <label>メインカテゴリー</label>
-      <p>ここはあとで入れます。</p>
+      <select class="form-maincategory" name="selectmaincategorybtn">
+        @foreach($main_categories as $main_category)
+          <option name="selectmaincategory" value="{{ $main_category->id }}">{{ $main_category->main_category }}</option>
+        @endforeach
+      </select>
       <label>新規サブカテゴリー</label>
       <input type="text" name="newsubcategory">
       <input type="submit" name="subcategorybtn" value="登録">
     </form>
+
     <p>カテゴリー一覧</p>
   </body>
 </html>

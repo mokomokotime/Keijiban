@@ -3,6 +3,7 @@
 namespace App\Models\Posts;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostSubCategory extends Model
 {
@@ -12,4 +13,8 @@ class PostSubCategory extends Model
         'post_main_category_id',
         'sub_category',
     ];
+
+    public function postMainCategories(){
+      return $this->hasMany('App\Models\Posts\PostMainCategory');
+    }
 }

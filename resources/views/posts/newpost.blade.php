@@ -20,7 +20,11 @@
     <form action="{{ route('post.newpost') }}" method="post">
     @csrf
       <label>サブカテゴリー</laberl>
-      <p>ここはあとで入れます。</p>
+      <select class="form-subcategory" name="selectsubcategorybtn">
+        @foreach($sub_categories as $sub_category)
+          <option name="selectsubcategory" value="{{ $sub_category->id }}">{{ $sub_category->sub_category }}</option>
+        @endforeach
+      </select>
       <label>タイトル</label>
       <input type="text" name="posttitle">
       <label>投稿内容</label>

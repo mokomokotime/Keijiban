@@ -52,6 +52,8 @@ Route::get('/commentfavorite', 'User\Post\PostCommentFavoritesController@comment
 Route::post('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
 
 //カテゴリー追加機能
-Route::get('/category', 'User\Post\PostsController@category');
+Route::get('/category', 'User\Post\PostsController@categoryindex');
+Route::post('/newmaincategory', 'User\Post\PostsController@newmaincategory');
+Route::post('/newsubcategory', 'User\Post\PostsController@newsubcategory');
 
 });

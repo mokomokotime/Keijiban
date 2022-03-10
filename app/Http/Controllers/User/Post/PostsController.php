@@ -12,6 +12,7 @@ use App\Models\Posts\PostComment;
 use App\Models\Posts\PostCommentfavorite;
 use App\Models\Posts\Postfavorite;
 use App\Models\Posts\PostMainCategory;
+use App\Models\Posts\PostSubCategory;
 use Auth;
 use Carbon\Carbon;
 
@@ -38,7 +39,11 @@ class PostsController extends Controller
   }
 
   public function newpost(){
-    return view('posts.newpost');
+    $sub_categories = DB::table('post_sub_categories')
+      ->select('post_sub_categories.id', 'post_sub_categories.sub_category')
+      ->get();
+
+    return view('posts.newpost', ['sub_categories' => $sub_categories]);
   }
 
   public function store(Request $request){
@@ -55,6 +60,7 @@ class PostsController extends Controller
 
       $posts = new Post;
       $date = Carbon::now();
+      $posts->post_sub_category_id = $request->selectsubcategorybtn;
       $posts->post = $request->postcontent;
       $posts->title = $request->posttitle;
       $posts->event_at = $date->format('Y-m-d');
@@ -166,21 +172,46 @@ class PostsController extends Controller
     ]);
   }
 
-  public function category(){
-    return view('posts.category');
+  public function categoryindex(){
+    $postMainCategories = PostMainCategory::with('postSubCategories')->first();
+
+    $main_categories = DB::table('post_main_categories')
+      ->select('post_main_categories.id', 'post_main_categories.main_category')
+      ->get();
+
+      return view('posts.category', [
+        'postMainCategories' => $postMainCategories,
+        'main_categories' => $main_categories,
+      ]);
   }
 
-  public function newcategory(Request $request){
+  public function newmaincategory(Request $request){
     $validator = Validator::make($request->all(),[
       'newmaincategory' => 'required|string|max:100|unique:post_main_categories,main_category',
     ]);
 
     $validator->validate();
 
-    $main_categorys = new MainCategory;
-    $main_categorys->main_category = $request->newmaincategory;
-    $main_categorys->save();
+    $main_categories = new PostMainCategory;
+    $main_categories->main_category = $request->newmaincategory;
+    $main_categories->save();
 
-    return view('posts.newcategory', ['main_categorys' => $main_categorys]);
+    return redirect('/category');
+  }
+
+  public function newsubcategory(Request $request){
+    $validator = Validator::make($request->all(),[
+      'selectmaincategory' => 'required|exists:post_main_categories,id',
+      'newsubcategory' => 'required|string|max:100|unique:post_sub_categories,sub_category',
+    ]);
+
+    $validator->validate();
+
+    $sub_categories = new PostSubCategory;
+    $sub_categories->post_main_category_id = $request->selectmaincategory;
+    $sub_categories->sub_category = $request->newsubcategory;
+    $sub_categories->save();
+
+    return redirect('/category');
   }
 }
