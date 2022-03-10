@@ -41,4 +41,12 @@ class Post extends Model
     public function isfavoritedBy($user): bool{
         return PostFavorite::where('user_id', $user->id)->where('post_id', $this->id)->first() !==null;
     }
+
+    //検索
+    public function scopeSearch($query, $searchword){
+      return $query->where(function($query) use($searchword){
+             $query->orWhere('title', 'like', "%{$searchword}%")
+                   ->orWhere('post', 'like', "%{$searchword}%");
+                 });
+    }
 }

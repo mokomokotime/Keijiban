@@ -21,6 +21,17 @@ class PostFavorite extends Model
     }
 
     public function post(){
-      return $this->belongsTo('App\Models\Posts\Post');
+      return $this->belongsTo('App\Models\Posts\Post', 'post_id', 'id');
+    }
+
+    public function join_favorite_user(){
+      return $this->hasManyThrough(
+          'App\Models\Users\User',
+          'App\Models\Posts\Post',
+          'user_id',
+          'id',
+          'post_id',
+          'id',
+      );
     }
 }

@@ -31,6 +31,7 @@ Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost')
 
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
+Route::get('/search', 'User\Post\PostsController@search')->name('name.search');
 
 //詳細画面
 Route::get('/{id}/post', 'User\Post\PostsController@detailpost')->name('post.detailpost');
@@ -49,5 +50,8 @@ Route::get('/favorite', 'User\Post\PostFavoritesController@postfavorite');
 Route::post('/favorite', 'User\Post\PostFavoritesController@postfavorite');
 Route::get('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
 Route::post('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
+
+//カテゴリー追加機能
+Route::get('/category', 'User\Post\PostsController@category');
 
 });

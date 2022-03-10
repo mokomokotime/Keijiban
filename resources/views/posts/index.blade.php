@@ -10,10 +10,12 @@
   <body>
     <p>掲示板投稿機能</p>
     <p><a href="/logout">ログアウト</a></p>
-    <p><a href="/newcategory">カテゴリーを追加</a></p>
+    <p><a href="/category">カテゴリーを追加</a></p>
     <p><a href="/post">投稿</a></p>
-    <input type="text" name="search">
-    <button type="button" name="button">検索</button>
+    <form class="post-search" action="{{ route('name.search') }}" method="get">
+      <input type="text" name="searchword" value="">
+      <button type="button" name="button">検索</button>
+    </form>
     <p><a href="/favoritepost">いいねした投稿</a></p>
     <p><a href="/mypost">自分の投稿</a>
 
@@ -36,7 +38,6 @@
       @endif
     @endforeach
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/ajaxmypost.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/_ajaxpostfavorite.js') }}"></script>
   </body>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Models\Posts;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostMainCategory extends Model
 {
@@ -13,6 +14,6 @@ class PostMainCategory extends Model
     ];
 
     public function posts(){
-        return $this->hasMany('app\Models\Posts\Post');
+        return $this->hasMany('App\Models\Posts\Post');
     }
 }

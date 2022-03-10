@@ -11,6 +11,7 @@ use App\Models\Users\User;
 use App\Models\Posts\PostComment;
 use App\Models\Posts\PostCommentfavorite;
 use App\Models\Posts\Postfavorite;
+use App\Models\Posts\PostMainCategory;
 use Auth;
 use Carbon\Carbon;
 
@@ -80,30 +81,24 @@ class PostsController extends Controller
 
     return view('posts.index', [
       'users_posts' => $users_posts,
-      $param, 'post' => $post
+      $param, 'post' => $post,
     ]);
   }
 
   public function favoritepost(){
-    $user_id = Auth::id();
-    $users_posts = DB::table('posts')
-      ->join('post_favorites', 'posts.id', '=', 'post_favorites.user_id')
-      ->join('users', 'posts.id', '=', 'users.id')
-      ->where('post_favorites.user_id', $user_id)
-      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_favorites.user_id', 'post_favorites.post_id')
-      ->latest()
-      ->whereNull('posts.deleted_at')
-      ->whereNull('post_favorites.deleted_at')
-      ->get();
+    $user = Auth::user();
+    $users_posts = PostFavorite::with(['post', 'post.user'])
+        ->where('user_id', $user->id)
+        ->get();
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
     $param = [
       'post' => $post,
     ];
 
-    return view('posts.index', [
+    return view('posts.favoritepost', [
       'users_posts' => $users_posts,
-      $param, 'post' => $post
+      $param, 'post' => $post,
     ]);
   }
 
@@ -155,5 +150,37 @@ class PostsController extends Controller
     $post->delete();
 
     return redirect('/top');
+  }
+
+  public function search(Request $request){
+    $searchword = $request->searchword;
+
+    $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
+    $param = [
+      'post' => $post,
+    ];
+
+    return view('posts.index', [
+      'searchword' => $searchword,
+      $param, 'post' => $post,
+    ]);
+  }
+
+  public function category(){
+    return view('posts.category');
+  }
+
+  public function newcategory(Request $request){
+    $validator = Validator::make($request->all(),[
+      'newmaincategory' => 'required|string|max:100|unique:post_main_categories,main_category',
+    ]);
+
+    $validator->validate();
+
+    $main_categorys = new MainCategory;
+    $main_categorys->main_category = $request->newmaincategory;
+    $main_categorys->save();
+
+    return view('posts.newcategory', ['main_categorys' => $main_categorys]);
   }
 }
