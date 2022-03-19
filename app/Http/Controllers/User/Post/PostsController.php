@@ -173,15 +173,15 @@ class PostsController extends Controller
   }
 
   public function categoryindex(){
-    $postMainCategories = PostMainCategory::with('postSubCategories')->first();
-
+    $postMainCategories = PostMainCategory::with('postSubCategories')->get();
+    $post = DB::table('posts')->select('post_sub_category_id')->first();
     $main_categories = DB::table('post_main_categories')
       ->select('post_main_categories.id', 'post_main_categories.main_category')
       ->get();
 
       return view('posts.category', [
         'postMainCategories' => $postMainCategories,
-        'main_categories' => $main_categories,
+        'main_categories' => $main_categories, 'post' => $post,
       ]);
   }
 
@@ -201,14 +201,14 @@ class PostsController extends Controller
 
   public function newsubcategory(Request $request){
     $validator = Validator::make($request->all(),[
-      'selectmaincategory' => 'required|exists:post_main_categories,id',
+      'selectmaincategorybtn' => 'required|exists:post_main_categories,id',
       'newsubcategory' => 'required|string|max:100|unique:post_sub_categories,sub_category',
     ]);
 
     $validator->validate();
 
     $sub_categories = new PostSubCategory;
-    $sub_categories->post_main_category_id = $request->selectmaincategory;
+    $sub_categories->post_main_category_id = $request->selectmaincategorybtn;
     $sub_categories->sub_category = $request->newsubcategory;
     $sub_categories->save();
 
