@@ -28,13 +28,14 @@ class PostsController extends Controller
         ->get();
 
       $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
+      $comments = DB::table('post_comments')->select('comment')->get();
       $param = [
         'post' => $post,
       ];
 
       return view('posts.index', [
         'users_posts' => $users_posts, $param,
-        'post' => $post,
+        'post' => $post, 'comments' => $comments,
       ]);
   }
 
@@ -174,14 +175,13 @@ class PostsController extends Controller
 
   public function categoryindex(){
     $postMainCategories = PostMainCategory::with('postSubCategories')->get();
-    $post = DB::table('posts')->select('post_sub_category_id')->first();
     $main_categories = DB::table('post_main_categories')
       ->select('post_main_categories.id', 'post_main_categories.main_category')
       ->get();
 
       return view('posts.category', [
         'postMainCategories' => $postMainCategories,
-        'main_categories' => $main_categories, 'post' => $post,
+        'main_categories' => $main_categories,
       ]);
   }
 

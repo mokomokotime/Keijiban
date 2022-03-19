@@ -39,14 +39,14 @@
     <p>カテゴリー一覧</p>
     @foreach($postMainCategories as $postMainCategory)
       <p>{{ $postMainCategory->main_category }}</p>
-      @if($postMainCategory->id !== $postMainCategory->postSubCategories->post_main_category_id)
+      @if($postMainCategory->postSubCategories->isEmpty())
         <input type="submit" name="maincategorydeletebtn" value="削除">
       @endif
       @foreach($postMainCategory->postSubCategories as $postSubCategory)
         <p>{{ $postSubCategory->sub_category }}</p>
-        @if($postSubCategory->id !== $post->post_sub_category_id)
-          <input type="submit" name="subcategorydeletebtn" value="削除">
-        @endif
+          @if($postSubCategory->posts->isEmpty())
+            <input type="submit" name="subcategorydeletebtn" value="削除">
+          @endif
       @endforeach
     @endforeach
   </body>
