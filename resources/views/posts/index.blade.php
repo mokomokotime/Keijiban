@@ -12,9 +12,9 @@
     <p><a href="/logout">ログアウト</a></p>
     <p><a href="/category">カテゴリーを追加</a></p>
     <p><a href="/post">投稿</a></p>
-    <form class="post-search" action="{{ route('name.search') }}" method="get">
-      <input type="text" name="searchword" value="">
-      <button type="button" name="button">検索</button>
+    <form class="post-search" action="/search" method="get">
+      <input type="text" name="searchword" value="{{ $searchword }}">
+      <button type="submit" name="search">検索</button>
     </form>
     <p><a href="/favoritepost">いいねした投稿</a></p>
     <p><a href="/mypost">自分の投稿</a>

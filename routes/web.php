@@ -31,7 +31,7 @@ Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost')
 
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
-Route::get('/search', 'User\Post\PostsController@search')->name('name.search');
+Route::get('/search', 'User\Post\PostsController@search');
 
 //詳細画面
 Route::get('/{id}/post', 'User\Post\PostsController@detailpost')->name('post.detailpost');

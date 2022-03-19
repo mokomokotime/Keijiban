@@ -18,7 +18,7 @@ use Carbon\Carbon;
 
 class PostsController extends Controller
 {
-  public function index(){
+  public function index(Request $request){
       $user_id = Auth::id();
       $users_posts = DB::table('users')
         ->join('posts', 'users.id', '=', 'posts.user_id')
@@ -26,6 +26,7 @@ class PostsController extends Controller
         ->latest()
         ->whereNull('posts.deleted_at')
         ->get();
+      $searchword = $request->input('searchword');
 
       $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
       $comments = DB::table('post_comments')->select('comment')->get();
@@ -35,7 +36,7 @@ class PostsController extends Controller
 
       return view('posts.index', [
         'users_posts' => $users_posts, $param,
-        'post' => $post, 'comments' => $comments,
+        'post' => $post, 'comments' => $comments, 'searchword' => $searchword,
       ]);
   }
 
@@ -160,17 +161,34 @@ class PostsController extends Controller
   }
 
   public function search(Request $request){
-    $searchword = $request->searchword;
+    $searchword = $request->input('searchword');
+
+    $query = Post::query();
+    if(isset($searchword)){
+      $query->where('title', 'like', '%' . self::escapeLike($searchword) . '%');
+      $query->where('post', 'like', '%' . self::escapeLike($searchword) . '%');
+    }
+    $query = PostSubCategory::query();
+    if(isset($searchword)){
+      $query->where('sub_category', $searchword);
+    }
+
+    $users_posts = $query->orderBy('created_at', 'desc')->get();
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
+    $comments = DB::table('post_comments')->select('comment')->get();
     $param = [
       'post' => $post,
     ];
 
     return view('posts.index', [
-      'searchword' => $searchword,
-      $param, 'post' => $post,
+      'searchword' => $searchword, 'users_posts' => $users_posts,
+      $param, 'post' => $post, 'comments' => $comments,
     ]);
+  }
+
+  public static function escapeLike($str){
+      return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
   }
 
   public function categoryindex(){
