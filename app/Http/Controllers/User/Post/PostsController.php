@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Post;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Posts\Post;
@@ -20,8 +21,8 @@ class PostsController extends Controller
 {
   public function index(Request $request){
       $user_id = Auth::id();
-      $users_posts = DB::table('users')
-        ->join('posts', 'users.id', '=', 'posts.user_id')
+      $users_posts = DB::table('posts')
+        ->join('users', 'users.id', '=', 'posts.user_id')
         ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title')
         ->latest()
         ->whereNull('posts.deleted_at')
@@ -165,20 +166,18 @@ class PostsController extends Controller
   public function search(Request $request){
     $searchword = $request->input('searchword');
 
-    $postresult = Post::query();
-    $postresult->select(['title', 'post', 'created_at']);
-    if(isset($searchword)){
-      $postresult->where('title', 'like', '%' . self::escapeLike($searchword) . '%')
-                 ->orwhere('post', 'like', '%' . self::escapeLike($searchword) . '%');
+    if(!empty($searchword)){
+    $result = Post::where('title', 'like', '%' . self::escapeLike($searchword) . '%')
+      ->orWhere('post', 'like', '%' . self::escapeLike($searchword) . '%')
+      ->orWhereHas('SubCategory', function($query) use ($searchword){
+          $query->where('sub_category', $searchword);
+      })
+      ->get();
+    } else {
+      return redirect('/');
     }
 
-    $subcategoryresult = PostSubCategory::query();
-    $subcategoryresult->select(['id', 'post_main_category_id' , 'sub_category']);
-    if(isset($searchword)){
-      $subcategoryresult->where('sub_category', $searchword);
-    }
-
-    $users_posts = $postresult->union($subcategoryresult)->orderBy('created_at', 'desc')->get();
+    $users_posts = $result->orderBy('created_at', 'desc')->get();
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
     $comments = DB::table('post_comments')->select('comment')->get();

@@ -30,7 +30,7 @@ class Post extends Model
     }
 
     public function SubCategory(){
-       return $this->belongTo('App\Models\Posts\PostSubCategory');
+       return $this->belongsTo('App\Models\Posts\PostSubCategory');
     }
 
     public function postfavorite(){
