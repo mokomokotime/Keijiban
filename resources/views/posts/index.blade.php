@@ -19,11 +19,17 @@
     <p><a href="/favoritepost">いいねした投稿</a></p>
     <p><a href="/mypost">自分の投稿</a>
 
+    <div class="category-wrap">
+      <h2>カテゴリー</h2>
+      
+    </div>
+
     @foreach($users_posts as $user_post)
       <p>{{ $user_post->username }}さん</p>
       <p>{{ $user_post->created_at }}</p>
       <p>{{ $count }}View</p>
       <p><a href="{{ $user_post->id }}/post">{{ $user_post->title }}</a></p>
+      <p>{{ $user_post->sub_category }}</p>
       <p>コメント数：{{ $comments->count() }}</p>
       @if (!$post->isfavoritedBy(Auth::user()))
         <span class="favorites">

@@ -20,9 +20,9 @@
     @foreach($users_posts as $user_post)
       <p>{{ $user_post->post->user->username }}さん</p>
       <p>{{ $user_post->post->created_at }}</p>
-      <p>○○View</p>
+      <p>{{ $count }}View</p>
       <p><a href="{{ $user_post->post->id }}/post">{{ $user_post->post->title }}</a></p>
-      <p>コメント数：</p>
+      <p>コメント数：{{ $comments->count() }}</p>
       @if (!$post->isfavoritedBy(Auth::user()))
         <span class="favorites">
             <i class="far fa-heart favorite-toggle" data-post-id="{{ $user_post->post->id }}"></i>

@@ -23,7 +23,8 @@ class PostsController extends Controller
       $user_id = Auth::id();
       $users_posts = DB::table('posts')
         ->join('users', 'users.id', '=', 'posts.user_id')
-        ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title')
+        ->join('post_sub_categories', 'post_sub_categories.id', '=', 'posts.post_sub_category_id')
+        ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_sub_categories.sub_category')
         ->latest()
         ->whereNull('posts.deleted_at')
         ->get();
@@ -84,10 +85,11 @@ class PostsController extends Controller
 
   public function mypost(Request $request){
     $user_id = Auth::id();
-    $users_posts = DB::table('users')
-      ->join('posts', 'users.id', '=', 'posts.user_id')
+    $users_posts = DB::table('posts')
+      ->join('users', 'users.id', '=', 'posts.user_id')
+      ->join('post_sub_categories', 'post_sub_categories.id', '=', 'posts.post_sub_category_id')
       ->where('user_id', $user_id)
-      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title')
+      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_sub_categories.sub_category')
       ->latest()
       ->whereNull('posts.deleted_at')
       ->get();
@@ -99,13 +101,22 @@ class PostsController extends Controller
     $searchword = $request->input('searchword');
     $comments = DB::table('post_comments')->select('comment')->get();
 
+    //アクセスカウンター
+    if(session()->has('count')){
+        $count = session('count');
+    }else{
+        $count = 0;
+    }
+    $count++;
+    session(['count' => "$count"]);
+
     return view('posts.index', [
-      'users_posts' => $users_posts, 'comments' => $comments,
+      'users_posts' => $users_posts, 'comments' => $comments, 'count' => $count,
       $param, 'post' => $post, 'searchword' => $searchword,
     ]);
   }
 
-  public function favoritepost(){
+  public function favoritepost(Request $request){
     $user = Auth::user();
     $users_posts = PostFavorite::with(['post', 'post.user'])
         ->where('user_id', $user->id)
@@ -115,10 +126,22 @@ class PostsController extends Controller
     $param = [
       'post' => $post,
     ];
+    $searchword = $request->input('searchword');
+    $comments = DB::table('post_comments')->select('comment')->get();
+
+    //アクセスカウンター
+    if(session()->has('count')){
+        $count = session('count');
+    }else{
+        $count = 0;
+    }
+    $count++;
+    session(['count' => "$count"]);
+
 
     return view('posts.favoritepost', [
-      'users_posts' => $users_posts,
-      $param, 'post' => $post,
+      'users_posts' => $users_posts, 'comments' => $comments, 'count' => $count,
+      $param, 'post' => $post, 'searchword' => $searchword,
     ]);
   }
 
