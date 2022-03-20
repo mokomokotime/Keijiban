@@ -14,7 +14,7 @@
     <p>{{ $post->created_at }}</p>
     <p>{{ $post->title }}</p>
     <p>{{ $post->post }}</p>
-    <p>○○View</p>
+    <p>{{ $count }}View</p>
     <p>コメント数：{{ $comments->count() }}</p>
     @if (!$post_fav->isfavoritedBy(Auth::user()))
       <span class="favorites">

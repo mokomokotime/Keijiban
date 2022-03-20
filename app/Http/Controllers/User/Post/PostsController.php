@@ -124,8 +124,17 @@ class PostsController extends Controller
       'comment_fav' => $comment_fav,
     ];
 
+    //アクセスカウンター
+    if(session()->has('count')){
+        $count = session('count');
+    }else{
+        $count = 0;
+    }
+    $count++;
+    session(['count' => "$count"]);
+
     return view('posts.detailpost', [
-        'post' => $post, 'post_fav' => $post_fav,
+        'post' => $post, 'post_fav' => $post_fav, 'count' => $count,
         'user' => $user, 'comments' => $comments,
         $param, 'comment_fav' => $comment_fav,
     ]);
