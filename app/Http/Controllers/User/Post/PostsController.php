@@ -118,13 +118,15 @@ class PostsController extends Controller
     $post = Post::findOrFail($id);
 
     $comment_fav = PostComment::withCount('commentfavorite')->orderBy('id', 'desc')->first();
+    $post_fav = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
+    $comments = DB::table('post_comments')->select('comment')->get();
     $param = [
       'comment_fav' => $comment_fav,
     ];
 
     return view('posts.detailpost', [
-        'post' => $post,
-        'user' => $user,
+        'post' => $post, 'post_fav' => $post_fav,
+        'user' => $user, 'comments' => $comments,
         $param, 'comment_fav' => $comment_fav,
     ]);
   }
@@ -167,8 +169,8 @@ class PostsController extends Controller
     $searchword = $request->input('searchword');
 
     if(!empty($searchword)){
-    $result = Post::where('title', 'like', '%' . self::escapeLike($searchword) . '%')
-      ->orWhere('post', 'like', '%' . self::escapeLike($searchword) . '%')
+    $result = Post::where('title', 'like', '%' . $searchword . '%')
+      ->orWhere('post', 'like', '%' . $searchword . '%')
       ->orWhereHas('SubCategory', function($query) use ($searchword){
           $query->where('sub_category', $searchword);
       })

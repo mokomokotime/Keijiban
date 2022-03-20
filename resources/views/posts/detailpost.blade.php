@@ -15,6 +15,18 @@
     <p>{{ $post->title }}</p>
     <p>{{ $post->post }}</p>
     <p>○○View</p>
+    <p>コメント数：{{ $comments->count() }}</p>
+    @if (!$post_fav->isfavoritedBy(Auth::user()))
+      <span class="favorites">
+          <i class="far fa-heart favorite-toggle" data-post-id="{{ $post->id }}"></i>
+        <span class="post-favorite-counter">{{ $post_fav->postfavorite_count }}</span>
+      </span>
+    @else
+      <span class="favorites">
+          <i class="fas fa-heart favorited favorite-toggle" data-post-id="{{ $post->id }}"></i>
+        <span class="post-favorite-counter">{{ $post_fav->postfavorite_count }}</span>
+      </span>
+    @endif
     @if( $post->user_id === Auth::user()->id )
       <a href="/{{ $post->id }}/{{ $post->user_id }}/post/edit">編集</a>
     @endif
@@ -26,7 +38,6 @@
         <a href="/{{ $comment->id }}/{{ $comment->user_id }}/comment/edit">編集</a>
       @endif
       <p>{{ $comment->comment }}</p>
-      <p>コメント数：0</p>
       @if (!$comment_fav->isfavoritedBy(Auth::user()))
         <span class="comment-favorites">
             <i class="far fa-heart favorite-toggle" data-comment-id="{{ $comment->id }}"></i>
