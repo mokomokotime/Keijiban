@@ -14,7 +14,7 @@
     <p><a href="/post">投稿</a></p>
     <form class="post-search" action="/search" method="get">
       <input type="text" name="searchword" value="{{ $searchword }}">
-      <button type="submit">検索</button>
+      <button type="button" name="search">検索</button>
     </form>
     <p><a href="/favoritepost">いいねした投稿</a></p>
     <p><a href="/mypost">自分の投稿</a>

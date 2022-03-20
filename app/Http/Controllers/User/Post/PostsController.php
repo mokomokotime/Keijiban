@@ -72,7 +72,7 @@ class PostsController extends Controller
       return redirect('/top');
   }
 
-  public function mypost(){
+  public function mypost(Request $request){
     $user_id = Auth::id();
     $users_posts = DB::table('users')
       ->join('posts', 'users.id', '=', 'posts.user_id')
@@ -86,10 +86,12 @@ class PostsController extends Controller
     $param = [
       'post' => $post,
     ];
+    $searchword = $request->input('searchword');
+    $comments = DB::table('post_comments')->select('comment')->get();
 
     return view('posts.index', [
-      'users_posts' => $users_posts,
-      $param, 'post' => $post,
+      'users_posts' => $users_posts, 'comments' => $comments,
+      $param, 'post' => $post, 'searchword' => $searchword,
     ]);
   }
 
@@ -163,17 +165,20 @@ class PostsController extends Controller
   public function search(Request $request){
     $searchword = $request->input('searchword');
 
-    $query = Post::query();
+    $postresult = Post::query();
+    $postresult->select(['title', 'post', 'created_at']);
     if(isset($searchword)){
-      $query->where('title', 'like', '%' . self::escapeLike($searchword) . '%');
-      $query->where('post', 'like', '%' . self::escapeLike($searchword) . '%');
-    }
-    $query = PostSubCategory::query();
-    if(isset($searchword)){
-      $query->where('sub_category', $searchword);
+      $postresult->where('title', 'like', '%' . self::escapeLike($searchword) . '%')
+                 ->orwhere('post', 'like', '%' . self::escapeLike($searchword) . '%');
     }
 
-    $users_posts = $query->orderBy('created_at', 'desc')->get();
+    $subcategoryresult = PostSubCategory::query();
+    $subcategoryresult->select(['id', 'post_main_category_id' , 'sub_category']);
+    if(isset($searchword)){
+      $subcategoryresult->where('sub_category', $searchword);
+    }
+
+    $users_posts = $postresult->union($subcategoryresult)->orderBy('created_at', 'desc')->get();
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
     $comments = DB::table('post_comments')->select('comment')->get();
