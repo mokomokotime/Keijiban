@@ -32,6 +32,7 @@ Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost')
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
 Route::get('/search', 'User\Post\PostsController@search');
+Route::get('/subcategorypost', 'User\Post\PostsController@subcategorypost')
 
 //詳細画面
 Route::get('/{id}/post', 'User\Post\PostsController@detailpost')->name('post.detailpost');
@@ -52,8 +53,8 @@ Route::get('/commentfavorite', 'User\Post\PostCommentFavoritesController@comment
 Route::post('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
 
 //カテゴリー追加機能
-Route::get('/category', 'User\Post\PostsController@categoryindex');
-Route::post('/newmaincategory', 'User\Post\PostsController@newmaincategory');
-Route::post('/newsubcategory', 'User\Post\PostsController@newsubcategory');
+Route::get('/category', 'Admin\Post\PostMainCategoriesController@categoryindex');
+Route::post('/newmaincategory', 'Admin\Post\PostMainCategoriesController@newmaincategory');
+Route::post('/newsubcategory', 'Admin\Post\PostSubCategoriesController@newsubcategory');
 
 });

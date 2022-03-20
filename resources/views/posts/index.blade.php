@@ -20,8 +20,13 @@
     <p><a href="/mypost">自分の投稿</a>
 
     <div class="category-wrap">
-      <h2>カテゴリー</h2>
-      
+      <h3>カテゴリー</h3>
+      @foreach($postMainCategories as $postMainCategory)
+        <p>{{ $postMainCategory->main_category }}</p>
+        @foreach($postMainCategory->postSubCategories as $postSubCategory)
+          <p><a href="/subcategorypost">{{ $postSubCategory->sub_category }}</a></p>
+        @endforeach
+      @endforeach
     </div>
 
     @foreach($users_posts as $user_post)

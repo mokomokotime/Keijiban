@@ -36,6 +36,8 @@ class PostsController extends Controller
         'post' => $post,
       ];
 
+      $postMainCategories = PostMainCategory::with('postSubCategories')->get();
+
       //アクセスカウンター
       if(session()->has('count')){
           $count = session('count');
@@ -48,6 +50,7 @@ class PostsController extends Controller
       return view('posts.index', [
         'users_posts' => $users_posts, $param, 'count' => $count,
         'post' => $post, 'comments' => $comments, 'searchword' => $searchword,
+        'postMainCategories' => $postMainCategories,
       ]);
   }
 
@@ -238,45 +241,4 @@ class PostsController extends Controller
       return str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $str);
   }
 
-  public function categoryindex(){
-    $postMainCategories = PostMainCategory::with('postSubCategories')->get();
-    $main_categories = DB::table('post_main_categories')
-      ->select('post_main_categories.id', 'post_main_categories.main_category')
-      ->get();
-
-      return view('posts.category', [
-        'postMainCategories' => $postMainCategories,
-        'main_categories' => $main_categories,
-      ]);
-  }
-
-  public function newmaincategory(Request $request){
-    $validator = Validator::make($request->all(),[
-      'newmaincategory' => 'required|string|max:100|unique:post_main_categories,main_category',
-    ]);
-
-    $validator->validate();
-
-    $main_categories = new PostMainCategory;
-    $main_categories->main_category = $request->newmaincategory;
-    $main_categories->save();
-
-    return redirect('/category');
-  }
-
-  public function newsubcategory(Request $request){
-    $validator = Validator::make($request->all(),[
-      'selectmaincategorybtn' => 'required|exists:post_main_categories,id',
-      'newsubcategory' => 'required|string|max:100|unique:post_sub_categories,sub_category',
-    ]);
-
-    $validator->validate();
-
-    $sub_categories = new PostSubCategory;
-    $sub_categories->post_main_category_id = $request->selectmaincategorybtn;
-    $sub_categories->sub_category = $request->newsubcategory;
-    $sub_categories->save();
-
-    return redirect('/category');
-  }
 }
