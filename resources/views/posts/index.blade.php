@@ -22,7 +22,7 @@
     @foreach($users_posts as $user_post)
       <p>{{ $user_post->username }}さん</p>
       <p>{{ $user_post->created_at }}</p>
-      <p>○○View</p>
+      <p>{{ $count }}View</p>
       <p><a href="{{ $user_post->id }}/post">{{ $user_post->title }}</a></p>
       <p>コメント数：{{ $comments->count() }}</p>
       @if (!$post->isfavoritedBy(Auth::user()))

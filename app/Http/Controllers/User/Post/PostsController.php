@@ -35,8 +35,17 @@ class PostsController extends Controller
         'post' => $post,
       ];
 
+      //アクセスカウンター
+      if(session()->has('count')){
+          $count = session('count');
+      }else{
+          $count = 0;
+      }
+      $count++;
+      session(['count' => "$count"]);
+
       return view('posts.index', [
-        'users_posts' => $users_posts, $param,
+        'users_posts' => $users_posts, $param, 'count' => $count,
         'post' => $post, 'comments' => $comments, 'searchword' => $searchword,
       ]);
   }
