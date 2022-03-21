@@ -40,12 +40,20 @@
     @foreach($postMainCategories as $postMainCategory)
       <p>{{ $postMainCategory->main_category }}</p>
       @if($postMainCategory->postSubCategories->isEmpty())
-        <input type="submit" name="maincategorydeletebtn" value="削除">
+        <form action="/maincategory/delete" method="post">
+        @csrf
+          <input type="submit" name="maincategorydeletebtn" value="削除">
+          <input type="hidden" name="maincategoryid" value="{{ $postMainCategory->id }}">
+        </form>
       @endif
       @foreach($postMainCategory->postSubCategories as $postSubCategory)
         <p>{{ $postSubCategory->sub_category }}</p>
           @if($postSubCategory->posts->isEmpty())
-            <input type="submit" name="subcategorydeletebtn" value="削除">
+            <form action="/subcategory/delete" method="post">
+            @csrf
+              <input type="submit" name="subcategorydeletebtn" value="削除">
+              <input type="hidden" name="subcategoryid" value="{{ $postSubCategory->id }}">
+            </form>
           @endif
       @endforeach
     @endforeach

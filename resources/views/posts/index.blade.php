@@ -10,7 +10,9 @@
   <body>
     <p>掲示板投稿機能</p>
     <p><a href="/logout">ログアウト</a></p>
-    <p><a href="/category">カテゴリーを追加</a></p>
+    @if( $users_posts->admin_role = 10 === Auth::user()->admin_role = 10 )
+      <p><a href="/category">カテゴリーを追加</a></p>
+    @endif
     <p><a href="/post">投稿</a></p>
     <form class="post-search" action="/search" method="get">
       <input type="text" name="searchword" value="{{ $searchword }}">
@@ -31,7 +33,7 @@
 
     @foreach($users_posts as $user_post)
       <p>{{ $user_post->username }}さん</p>
-      <p>{{ $user_post->created_at }}</p>
+      <p>{{ $user_post->event_at }}</p>
       <p>{{ $count }}View</p>
       <p><a href="{{ $user_post->id }}/post">{{ $user_post->title }}</a></p>
       <p>{{ $user_post->sub_category }}</p>

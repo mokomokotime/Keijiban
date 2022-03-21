@@ -33,4 +33,11 @@ class PostSubCategoriesController extends Controller
 
     return redirect('/category');
   }
+
+  public function subcategorydelete(Request $request){
+    $sub_category = PostSubCategory::find($request->subcategoryid);
+    $sub_category->delete();
+
+    return redirect('/category');
+  }
 }

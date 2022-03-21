@@ -52,9 +52,10 @@ Route::post('/favorite', 'User\Post\PostFavoritesController@postfavorite');
 Route::get('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
 Route::post('/commentfavorite', 'User\Post\PostCommentFavoritesController@commentfavorite');
 
-//カテゴリー追加機能
+//カテゴリー機能
 Route::get('/category', 'Admin\Post\PostMainCategoriesController@categoryindex');
 Route::post('/newmaincategory', 'Admin\Post\PostMainCategoriesController@newmaincategory');
 Route::post('/newsubcategory', 'Admin\Post\PostSubCategoriesController@newsubcategory');
-
+Route::post('/subcategory/delete', 'Admin\Post\PostSubCategoriesController@subcategorydelete');
+Route::post('/maincategory/delete', 'Admin\Post\PostMainCategoriesController@maincategorydelete');
 });

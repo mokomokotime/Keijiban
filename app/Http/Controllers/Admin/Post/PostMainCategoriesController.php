@@ -22,6 +22,7 @@ class PostMainCategoriesController extends Controller
     $postMainCategories = PostMainCategory::with('postSubCategories')->get();
     $main_categories = DB::table('post_main_categories')
       ->select('post_main_categories.id', 'post_main_categories.main_category')
+      ->whereNull('post_main_categories.deleted_at')
       ->get();
 
       return view('posts.category', [
@@ -40,6 +41,13 @@ class PostMainCategoriesController extends Controller
     $main_categories = new PostMainCategory;
     $main_categories->main_category = $request->newmaincategory;
     $main_categories->save();
+
+    return redirect('/category');
+  }
+
+  public function maincategorydelete(Request $request){
+    $main_category = PostMainCategory::find($request->maincategoryid);
+    $main_category->delete();
 
     return redirect('/category');
   }

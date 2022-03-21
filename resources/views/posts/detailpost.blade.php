@@ -33,7 +33,7 @@
     @foreach($post->comments as $comment)
       <p>コメント</p>
       <p>{{ $comment->user->username }}さん</p>
-      <p>{{ $comment->created_at }}</p>
+      <p>{{ $comment->event_at }}</p>
       @if( $comment->user_id === Auth::user()->id )
         <a href="/{{ $comment->id }}/{{ $comment->user_id }}/comment/edit">編集</a>
       @endif

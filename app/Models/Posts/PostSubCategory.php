@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostSubCategory extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'post_sub_categories';
 
     protected $fillable = [
@@ -20,5 +22,11 @@ class PostSubCategory extends Model
 
     public function postMainCategories(){
       return $this->belongsTo('App\Models\Posts\PostMainCategory');
+    }
+
+    public function getLists(){
+      $subcategories = PostSubCategory::pluck('id', 'sub_category');
+
+      return $subcategories;
     }
 }
