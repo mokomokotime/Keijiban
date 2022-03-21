@@ -32,7 +32,7 @@ Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost')
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
 Route::get('/search', 'User\Post\PostsController@search');
-Route::get('/subcategorypost', 'User\Post\PostsController@subcategorypost')
+Route::get('/subcategorypost', 'User\Post\PostsController@subcategorypost');
 
 //詳細画面
 Route::get('/{id}/post', 'User\Post\PostsController@detailpost')->name('post.detailpost');

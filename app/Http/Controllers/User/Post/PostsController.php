@@ -103,6 +103,7 @@ class PostsController extends Controller
     ];
     $searchword = $request->input('searchword');
     $comments = DB::table('post_comments')->select('comment')->get();
+    $postMainCategories = PostMainCategory::with('postSubCategories')->get();
 
     //アクセスカウンター
     if(session()->has('count')){
@@ -116,6 +117,7 @@ class PostsController extends Controller
     return view('posts.index', [
       'users_posts' => $users_posts, 'comments' => $comments, 'count' => $count,
       $param, 'post' => $post, 'searchword' => $searchword,
+      'postMainCategories' => $postMainCategories,
     ]);
   }
 
@@ -131,6 +133,7 @@ class PostsController extends Controller
     ];
     $searchword = $request->input('searchword');
     $comments = DB::table('post_comments')->select('comment')->get();
+    $postMainCategories = PostMainCategory::with('postSubCategories')->get();
 
     //アクセスカウンター
     if(session()->has('count')){
@@ -145,7 +148,41 @@ class PostsController extends Controller
     return view('posts.favoritepost', [
       'users_posts' => $users_posts, 'comments' => $comments, 'count' => $count,
       $param, 'post' => $post, 'searchword' => $searchword,
+      'postMainCategories' => $postMainCategories,
     ]);
+  }
+
+  public function subcategorypost(Request $request){
+    $users_posts = DB::table('posts')
+      ->join('users', 'users.id', '=', 'posts.user_id')
+      ->join('post_sub_categories', 'post_sub_categories.id', '=', 'posts.post_sub_category_id')
+      ->select('users.username', 'posts.post', 'posts.id', 'posts.user_id', 'posts.created_at', 'posts.title', 'post_sub_categories.sub_category')
+      ->latest()
+      ->whereNull('posts.deleted_at')
+      ->get();
+
+      $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
+      $param = [
+        'post' => $post,
+      ];
+      $searchword = $request->input('searchword');
+      $comments = DB::table('post_comments')->select('comment')->get();
+      $postMainCategories = PostMainCategory::with('postSubCategories')->get();
+
+      //アクセスカウンター
+      if(session()->has('count')){
+          $count = session('count');
+      }else{
+          $count = 0;
+      }
+      $count++;
+      session(['count' => "$count"]);
+
+      return view('posts.index', [
+        'users_posts' => $users_posts, 'comments' => $comments, 'count' => $count,
+        $param, 'post' => $post, 'searchword' => $searchword,
+        'postMainCategories' => $postMainCategories,
+      ]);
   }
 
   public function detailpost(Request $request, $id){
