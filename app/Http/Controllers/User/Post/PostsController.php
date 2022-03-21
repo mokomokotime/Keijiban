@@ -153,10 +153,14 @@ class PostsController extends Controller
   }
 
   public function subcategorypost(Request $request){
-      $subcategory = new PostSubCategory;
-      $subcategories = $subcategory->getLists();
-
       $subcategory_id = $request->subcategoryid;
+      $users_posts = DB::table('posts')
+          ->join('users', 'users.id', '=', 'posts.user_id')
+          ->join('post_sub_categories', 'post_sub_categories.id', '=', 'posts.post_sub_category_id')
+          ->select('users.username', 'posts.post_sub_category_id', 'posts.event_at', 'posts.id', 'posts.title', 'posts.post', 'post_sub_categories.sub_category')
+          ->where('post_sub_category_id', $subcategory_id)
+          ->orderBy('posts.created_at', 'desc')
+          ->get();
 
       $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
       $param = [

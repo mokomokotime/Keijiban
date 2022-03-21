@@ -29,7 +29,7 @@ Route::get('/logout', 'Auth\Login\LoginController@logout');
 Route::get('/post', 'User\Post\PostsController@newpost');
 Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost');
 
-//つぶやき表示
+//つぶやき切り替え表示
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
 Route::get('/search', 'User\Post\PostsController@search');
