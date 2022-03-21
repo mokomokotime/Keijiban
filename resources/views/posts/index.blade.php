@@ -10,9 +10,7 @@
   <body>
     <p>掲示板投稿機能</p>
     <p><a href="/logout">ログアウト</a></p>
-    @if( $users_posts->admin_role = 10 === Auth::user()->admin_role = 10 )
-      <p><a href="/category">カテゴリーを追加</a></p>
-    @endif
+    <p><a href="/category">カテゴリーを追加</a></p>
     <p><a href="/post">投稿</a></p>
     <form class="post-search" action="/search" method="get">
       <input type="text" name="searchword" value="{{ $searchword }}">

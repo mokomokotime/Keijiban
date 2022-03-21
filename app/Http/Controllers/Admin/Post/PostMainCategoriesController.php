@@ -18,6 +18,11 @@ use Auth;
 
 class PostMainCategoriesController extends Controller
 {
+
+  public function __construct(){
+        $this->middleware('can:admin');
+  }
+
   public function categoryindex(){
     $postMainCategories = PostMainCategory::with('postSubCategories')->get();
     $main_categories = DB::table('post_main_categories')

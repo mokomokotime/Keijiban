@@ -18,7 +18,14 @@ use Auth;
 
 class PostSubCategoriesController extends Controller
 {
-  public function newsubcategory(Request $request){
+
+  public function __construct(){
+        $this->middleware('can:admin');
+  }
+
+  public function newsubcpublic function __construct(){
+        $this->middleware('can:admin');
+  }ategory(Request $request){
     $validator = Validator::make($request->all(),[
       'selectmaincategorybtn' => 'required|exists:post_main_categories,id',
       'newsubcategory' => 'required|string|max:100|unique:post_sub_categories,sub_category',
