@@ -26,7 +26,11 @@
       @foreach($postMainCategories as $postMainCategory)
         <p>{{ $postMainCategory->main_category }}</p>
         @foreach($postMainCategory->postSubCategories as $postSubCategory)
-          <p><a href="/subcategorypost">{{ $postSubCategory->sub_category }}</a></p>
+          <form action="{{ route('post.subcategory') }}" method="post">
+            <button type="button" name="subcategorybtn">{{ $postSubCategory->sub_category }}</button>
+            <input type="hidden" name="subcategory" value="{{ $postSubCategory->sub_category }}">
+            <input type="hidden" name="subcategoryid" value="{{ $postSubCategory->id }}">
+          </form>
         @endforeach
       @endforeach
     </div>

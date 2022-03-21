@@ -29,10 +29,11 @@ Route::get('/logout', 'Auth\Login\LoginController@logout');
 Route::get('/post', 'User\Post\PostsController@newpost');
 Route::post('/newpost', 'User\Post\PostsController@store')->name('post.newpost');
 
+//つぶやき表示
 Route::get('/mypost', 'User\Post\PostsController@mypost');
 Route::get('/favoritepost', 'User\Post\PostsController@favoritepost');
 Route::get('/search', 'User\Post\PostsController@search');
-Route::get('/subcategorypost', 'User\Post\PostsController@subcategorypost');
+Route::get('/subcategorypost', 'User\Post\PostsController@subcategorypost')->name('post.subcategory');
 
 //詳細画面
 Route::get('/{id}/post', 'User\Post\PostsController@detailpost')->name('post.detailpost');
