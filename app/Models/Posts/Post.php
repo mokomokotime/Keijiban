@@ -29,7 +29,7 @@ class Post extends Model
         return $this->hasMany('App\Models\Posts\PostComment');
     }
 
-    public function SubCategory(){
+    public function postSubCategory(){
        return $this->belongsTo('App\Models\Posts\PostSubCategory');
     }
 

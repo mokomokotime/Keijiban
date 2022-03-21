@@ -251,27 +251,38 @@ class PostsController extends Controller
     $searchword = $request->input('searchword');
 
     if(!empty($searchword)){
-    $result = Post::where('title', 'like', '%' . $searchword . '%')
+    $users_posts = Post::join('users', 'users.id', '=', 'posts.user_id')
+      ->where('title', 'like', '%' . $searchword . '%')
       ->orWhere('post', 'like', '%' . $searchword . '%')
-      ->orWhereHas('SubCategory', function($query) use ($searchword){
+      ->orWhereHas('postSubCategory', function($query) use ($searchword){
           $query->where('sub_category', $searchword);
       })
+      ->orderBy('posts.created_at', 'desc')
       ->get();
     } else {
-      return redirect('/');
+      return redirect('/top');
     }
-
-    $users_posts = $result->orderBy('created_at', 'desc')->get();
 
     $post = Post::withCount('postfavorite')->orderBy('id', 'desc')->first();
     $comments = DB::table('post_comments')->select('comment')->get();
+    $postMainCategories = PostMainCategory::with('postSubCategories')->get();
     $param = [
       'post' => $post,
     ];
 
+    //アクセスカウンター
+    if(session()->has('count')){
+        $count = session('count');
+    }else{
+        $count = 0;
+    }
+    $count++;
+    session(['count' => "$count"]);
+
     return view('posts.index', [
       'searchword' => $searchword, 'users_posts' => $users_posts,
-      $param, 'post' => $post, 'comments' => $comments,
+      $param, 'post' => $post, 'comments' => $comments,'count' => $count,
+      'postMainCategories' => $postMainCategories,
     ]);
   }
 
